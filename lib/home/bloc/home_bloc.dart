@@ -34,7 +34,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           emit(HomeInitial());
           break;
         case UserCreationResult.failure:
-          emit(HomeInitial(error: " Ther;s been an error"));
+          emit(HomeInitial(error: " Theres been an error"));
           break;
         case UserCreationResult.alreadyExists:
           emit(HomeInitial(error: "User already exists"));

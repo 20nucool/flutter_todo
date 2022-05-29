@@ -8,11 +8,19 @@ import 'package:todo_app/services/todo.dart';
 import 'package:todo_app/todos/todos.dart';
 import 'bloc/home_bloc.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final usernameField = TextEditingController();
+
   final passwordField = TextEditingController();
 
-  HomePage({Key? key}) : super(key: key);
+  bool isHidden = true;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +44,7 @@ class HomePage extends StatelessWidget {
                 showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                          title: Text('Error'),
+                          title: const Text('Error'),
                           content: Text(state.error!),
                         ));
               }
@@ -46,33 +54,95 @@ class HomePage extends StatelessWidget {
             if (state is HomeInitial) {
               return Column(
                 children: [
-                  TextField(
-                    decoration: InputDecoration(labelText: 'username'),
-                    controller: usernameField,
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+                    child: TextField(
+                      textAlign: TextAlign.left,
+                      style:
+                          const TextStyle(fontSize: 25, color: Colors.black87),
+                      decoration: const InputDecoration(
+                        labelText: 'Username',
+                        fillColor: Color.fromARGB(255, 235, 233, 233),
+                        filled: true,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.white,
+                            width: 2.0,
+                          ),
+                        ),
+                      ),
+                      controller: usernameField,
+                    ),
                   ),
-                  TextField(
-                    obscureText: true,
-                    decoration: InputDecoration(labelText: 'Password'),
-                    controller: passwordField,
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+                    child: TextField(
+                      textAlign: TextAlign.left,
+                      style:
+                          const TextStyle(fontSize: 25, color: Colors.black87),
+                      obscureText: isHidden,
+                      obscuringCharacter: '*',
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        fillColor: Color.fromARGB(255, 235, 233, 233),
+                        filled: true,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.white,
+                            width: 2.0,
+                          ),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(isHidden
+                              ? Icons.visibility
+                              : Icons.visibility_off),
+                          onPressed: () {
+                            setState(() {
+                              isHidden = !isHidden;
+                            });
+                          },
+                        ),
+                      ),
+                      controller: passwordField,
+                    ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      ElevatedButton(
+                          onPressed: () => BlocProvider.of<HomeBloc>(context)
+                              .add(LoginEvent(usernameField.text.trim(),
+                                  passwordField.text)),
+                          child: const Text('Login'),
+                          style: ElevatedButton.styleFrom(
+                            primary: Color.fromARGB(255, 26, 153, 75),
+                            onPrimary: Color.fromARGB(255, 248, 235, 235),
+                            // onSurface: Color.fromARGB(240, 52, 70, 151),
+                            textStyle: const TextStyle(fontSize: 20),
+                          )),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ElevatedButton(
-                            onPressed: () {
-                              BlocProvider.of<HomeBloc>(context).add(
-                                  RegisterAccountEvent(
-                                      usernameField.text, passwordField.text));
-                            },
-                            child: Text('Register')),
+                          onPressed: () {
+                            BlocProvider.of<HomeBloc>(context).add(
+                                RegisterAccountEvent(usernameField.text.trim(),
+                                    passwordField.text));
+                          },
+                          child: const Text('Register'),
+                          style: ElevatedButton.styleFrom(
+                              primary: const Color.fromARGB(255, 26, 153, 75),
+                              onPrimary: Color.fromARGB(255, 248, 235, 235),
+                              textStyle: const TextStyle(
+                                fontSize: 20,
+                              )),
+                        ),
                       ),
                       ElevatedButton(
-                          onPressed: () => BlocProvider.of<HomeBloc>(context)
-                              .add(LoginEvent(
-                                  usernameField.text, passwordField.text)),
-                          child: const Text('Login')),
+                          onPressed: (() {
+                            String name = usernameField.text;
+                            print(name.trim() + 'A');
+                          }),
+                          child: Text('Print'))
                     ],
                   )
                 ],

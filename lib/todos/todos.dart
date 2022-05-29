@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_app/services/todo.dart';
 import 'package:todo_app/todos/bloc/todos_bloc.dart';
@@ -35,8 +35,14 @@ class TodosPage extends StatelessWidget {
                   ),
                 ),
                 ListTile(
-                  title: Text('Create new task'),
-                  trailing: Icon(Icons.create),
+                  title: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text('Create new task'),
+                      Icon(Icons.add),
+                    ],
+                  ),
+                  // trailing: Icon(Icons.create),
                   onTap: () async {
                     final result = await showDialog<String>(
                         context: context,
@@ -69,16 +75,43 @@ class _CreateNewTaskState extends State<CreateNewTask> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Text('What task do you want to create?'),
-      TextField(
-        controller: _inputController,
-      ),
-      ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pop(_inputController.text);
-          },
-          child: Text('SAVE')),
-    ]);
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(children: [
+        const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Text('What task do you want to create?',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 25, color: Color.fromARGB(255, 94, 60, 94))),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            style: const TextStyle(color: Colors.black87, fontSize: 20),
+            decoration: const InputDecoration(
+              labelText: 'New Task',
+            ),
+            controller: _inputController,
+          ),
+        ),
+        ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: const Color.fromARGB(255, 26, 153, 75),
+              onPrimary: const Color.fromARGB(255, 248, 235, 235),
+              // onSurface: Color.fromARGB(240, 52, 70, 151),
+              textStyle: const TextStyle(fontSize: 20),
+            ),
+            onPressed: () {
+              if (_inputController.text.trim() == null) {
+                return;
+              }
+              if (_inputController.text.trim() != null) {
+                Navigator.of(context).pop(_inputController.text);
+              }
+            },
+            child: const Text('SAVE')),
+      ]),
+    );
   }
 }

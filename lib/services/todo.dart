@@ -21,7 +21,9 @@ class TodoService {
   }
 
   void addTask(final String task, final String username) {
-    _tasks.add(Task(username, task, false));
+    if (task != null) {
+      _tasks.add(Task(username, task, false));
+    }
   }
 
   Future<void> removeTask(final String task, final String username) async {
